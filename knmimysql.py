@@ -3,7 +3,7 @@ import configparser
 import sys
 import os
 import time
-import datetime
+from datetime import datetime, timedelta
 from txmapping import txmap as txmap
 
 #assign configuration file
@@ -22,6 +22,7 @@ db_user = cfg.get('database','username')
 db_passwd = cfg.get('database','passwd')
 db_database = cfg.get('database','database')
 db_table = cfg.get('database','tablename')
+db_retention = cfg.get('database','retentiontime')
 
 #open database connection
 try:
@@ -34,13 +35,13 @@ except:
 # create timestamp
 def GetTimeStamp():
 	ts = time.time()
-	timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+	timestamp = datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
 	return(timestamp)
 
 # add weather warning to DB
 def AddWarningMessage(tempcode,tempprovincie,tempmsg):
 	temptimestamp = GetTimeStamp()
-	sqltext = 'INSERT INTO dapnetknmi (`knmi_timestamp`,`knmi_provincie`,`knmi_code`,`knmi_bericht`) VALUES ("' + temptimestamp + '","' + tempprovincie + '","' + tempcode + '","' + tempmsg + '")'
+	sqltext = 'INSERT INTO '+ db_table  +' (`knmi_timestamp`,`knmi_provincie`,`knmi_code`,`knmi_bericht`) VALUES ("' + temptimestamp + '","' + tempprovincie + '","' + tempcode + '","' + tempmsg + '")'
 	cur = db.cursor()
 	cur.execute(sqltext)
 	db.commit()
@@ -69,3 +70,15 @@ def DBInit():
 		dbcursor.execute(createstring)
 		dbcursor.close()
 		return()
+
+def CleanDB():
+	curtime = datetime.strptime(GetTimeStamp(), '%Y-%m-%d %H:%M:%S')
+	timethreshold = curtime - timedelta(hours=int(db_retention),minutes=0)
+	sqltext = 'DELETE FROM ' + db_table + ' WHERE knmi_timestamp < "' + str(timethreshold)+'"'
+	try:
+		cur = db.cursor()
+		cur.execute(sqltext)
+		db.commit()
+		cur.close()
+	except:
+		pass

@@ -14,3 +14,4 @@ username = databaseusername
 passwd = databasepassword
 database = databasename
 table = tablename
+retentiontime = 24

@@ -35,3 +35,4 @@ for entry in knmifeed.entries:
 	except:
 		pass
 
+CleanDB()
