@@ -29,8 +29,8 @@ for entry in knmifeed.entries:
 		msgcode = SearchCode(location)
 		if knmicode != SearchCode(location):
 #			send_page('pe2kmv','3',txgroup,'False',location + ': '+ knmimsg)
-#			for rb in rubrics:
-#				send_rubric(location + ': ' + knmimsg,rb)
+			for rb in rubrics:
+				send_rubric(location + ': ' + knmimsg,rb)
 			AddWarningMessage(knmicode,location,knmimsg)
 	except:
 		pass
