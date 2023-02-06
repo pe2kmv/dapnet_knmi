@@ -25,4 +25,7 @@ def send_page(msg_ric,func,trx,emr,msgtxt):
 	req = requests.post(dapnet_uri,auth=(dapnet_user,dapnet_pw),json={'text':msgtxt,'callSignNames':[msg_ric],'transmitterGroupNames':trx,'emergency':emr})
 
 def send_rubric(msgtxt,rbname):
+	if len(msgtxt) > 80:
+		msgtxt = msgtxt[0:77] + '...'
 	req = requests.post(dapnet_rubric,auth=(dapnet_user,dapnet_pw),json={'text':msgtxt,'rubricName':rbname,'number':1})
+

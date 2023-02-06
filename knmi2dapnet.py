@@ -13,6 +13,26 @@ knmifeed = feedparser.parse(feedurl)
 
 dbmessages = GetMsgList()
 
+from io import StringIO
+from html.parser import HTMLParser
+
+class MLStripper(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.reset()
+        self.strict = False
+        self.convert_charrefs= True
+        self.text = StringIO()
+    def handle_data(self, d):
+        self.text.write(d)
+    def get_data(self):
+        return self.text.getvalue()
+
+def strip_tags(html):
+    s = MLStripper()
+    s.feed(html)
+    return s.get_data()
+
 # lookup in dictionary
 def SearchCode(keyword):
 	for msg in dbmessages:
@@ -24,8 +44,8 @@ for entry in knmifeed.entries:
 		location = entry.title.split()[1]
 		txgroup = txmap[location].split(',')
 		rubrics = rubricmap[location].split(',')
-		knmimsg = entry.summary
-		knmicode = entry.summary.split()[1].upper().replace('.','')
+		knmimsg = strip_tags(entry.summary)
+		knmicode = strip_tags(entry.summary.split()[1].upper().replace('.',''))
 		msgcode = SearchCode(location)
 		if knmicode != SearchCode(location):
 #			send_page('pe2kmv','3',txgroup,'False',location + ': '+ knmimsg)

@@ -66,7 +66,7 @@ def DBInit():
 		dbcursor.close()
 		return()
 	if result == 0:
-		createstring = "CREATE TABLE IF NOT EXISTS " + db_table + " (knmi_id INT NOT NULL PRIMARY KEY,knmi_timestamp DATETIME NOT NULL, knmi_provincie VARCHAR(25) NOT NULL, knmi_code VARCHAR(10) NOT NULL,knmi_bericht VARCHAR(254) NOT NULL)"
+		createstring = "CREATE TABLE IF NOT EXISTS " + db_table + " (knmi_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,knmi_timestamp DATETIME NOT NULL, knmi_provincie VARCHAR(25) NOT NULL, knmi_code VARCHAR(10) NOT NULL,knmi_bericht VARCHAR(254) NOT NULL)"
 		dbcursor.execute(createstring)
 		dbcursor.close()
 		return()
