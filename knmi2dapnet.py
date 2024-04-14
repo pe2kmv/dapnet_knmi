@@ -35,9 +35,12 @@ def strip_tags(html):
 
 # lookup in dictionary
 def SearchCode(keyword):
-	for msg in dbmessages:
-		if keyword in msg:
-			return(msg[1])
+	if len(dbmessages) > 0:
+		for msg in dbmessages:
+			if keyword in msg:
+				return(msg[1])
+	else:
+		return()
 
 for entry in knmifeed.entries:
 	try:
